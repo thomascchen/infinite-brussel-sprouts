@@ -1,29 +1,31 @@
-var pageNum = 1
+$("a").remove();
 
-$(".more-sprouts").on("click", function(event) {
-  event.preventDefault();
+var pageNum = 1;
 
-  pageNum++
+$(document).ready(function() {
+  $( window ).scroll(function() {
+    if($(window).scrollTop() + window.innerHeight == $(document).height()) {
 
-  $.ajax({
-    type: "GET",
-    url: "/tweets.json?page=" + pageNum,
-    dataType: "json",
-    success: function(data) {
+      pageNum++;
 
-      for (var i = 0; i < data.length; i++ ) {
-        $(".tweets .tweet:nth-child(" + (i + 1) + ")").replaceWith(
-          "<li class='tweet'>" +
-          "<div class='body'>" + data[i].text + "</div>" +
-          "<div class='user'>" + data[i].username + "</div>" +
-          "</li>");
-      };
-    },
-
-    error: function() {
-      alert("Sorry something went wrong")
-    }
-
+      $.ajax({
+        type: "GET",
+        url: "/tweets.json?page=" + pageNum,
+        dataType: "json",
+        success: function(data) {
+          for (var i = 0; i < data.length; i++ ) {
+            $("ul.tweets").append(
+              "<li class='tweet'>" +
+              "<div class='body'>" + data[i].text + "</div>" +
+              "<div class='user'>" + data[i].username + "</div>" +
+              "</li>"
+            );
+          };
+        },
+        error: function() {
+          alert("Sorry something went wrong");
+        }
+      });
+    };
   });
-
 });
